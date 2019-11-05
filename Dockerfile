@@ -1,4 +1,4 @@
-FROM rust:1-stretch as builder
+FROM rust:1-stretch
 
 WORKDIR /usr/src/app
 
@@ -12,8 +12,4 @@ COPY src src
 
 RUN cargo build --release
 
-
-# Final image
-FROM debian:stretch-slim
-COPY --from=builder /usr/src/app/target/release/gitlab-hook-deploy /bin/
-CMD gitlab-hook-deploy
+CMD RUST_LOG=hello_world::web=debug /usr/src/app/target/release/gitlab-hook-deploy
