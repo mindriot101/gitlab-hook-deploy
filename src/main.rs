@@ -9,11 +9,6 @@ struct MyApp;
 
 impl_web! {
     impl MyApp {
-        #[get("/")]
-        fn index(&self) -> Result<&'static str, ()> {
-            Ok("hello")
-        }
-
         #[post("/hook")]
         fn hook(&self, body: Value) -> Result<&'static str, ()> {
             println!("{:#?}", body);
