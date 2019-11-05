@@ -14,12 +14,13 @@ impl_web! {
         #[post("/hook")]
         fn hook(&self, body: Value) -> Result<&'static str, ()> {
             println!("{:#?}", body);
-            let mut f = OpenOptions::new()
+            let open_result = OpenOptions::new()
                 .create(true)
                 .append(true)
-                .open("/hookdata/requests.txt")
-                .unwrap();
-            write!(&mut f, "{}\n", serde_json::to_string_pretty(&body).unwrap()).unwrap();
+                .open("/hookdata/requests.txt");
+            if let Ok(mut f) = open_result  {
+                write!(&mut f, "{}\n", serde_json::to_string_pretty(&body).unwrap()).unwrap();
+            }
             Ok("ok")
         }
     }
