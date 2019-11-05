@@ -2,6 +2,8 @@
 extern crate tower_web;
 
 use serde_json::Value;
+use std::fs::OpenOptions;
+use std::io::Write;
 use tower_web::middleware::log::LogMiddleware;
 use tower_web::ServiceBuilder;
 
@@ -12,6 +14,12 @@ impl_web! {
         #[post("/hook")]
         fn hook(&self, body: Value) -> Result<&'static str, ()> {
             println!("{:#?}", body);
+            let mut f = OpenOptions::new()
+                .create(true)
+                .append(true)
+                .open("/hookdata/requests.txt")
+                .unwrap();
+            write!(&mut f, "{}\n", serde_json::to_string_pretty(&body).unwrap()).unwrap();
             Ok("ok")
         }
     }
@@ -36,7 +44,8 @@ mod test {
 
     #[test]
     fn test_my_app() {
+        // let mut w =
         let app = MyApp {};
-        assert_eq!(app.index(), Ok("hello"));
+        assert_eq!(app.hook(serde_json::json! {null}), Ok("ok"));
     }
 }
