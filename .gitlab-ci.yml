@@ -3,4 +3,4 @@ image: "alpine:latest"
 
 test:
   script:
-    - true
+    - /bin/true
