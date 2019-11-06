@@ -5,6 +5,16 @@ services:
     volumes:
       - ./hook:/hookdata
 
+  runner:
+    image: gitlab/gitlab-runner:latest
+    volumes:
+      - ./gitlab/runner/config:/etc/gitlab-runner
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "5050:5050"
+    depends_on:
+      - gitlab
+
   gitlab:
     image: gitlab/gitlab-ce:12.4.2-ce.0
     ports:
